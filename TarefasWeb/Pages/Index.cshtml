@@ -1,0 +1,65 @@
+﻿@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Home page";
+}
+
+
+<div class="content d-flex flex-column flex-column-fluid" id="kt_content">
+    <!--begin::Entry-->
+    <div class="d-flex flex-column-fluid">
+        <!--begin::Container-->
+        <div class="container">
+            <!--begin::Dashboard-->
+            <!--begin::Row-->
+            <div class="row mt-0 mt-lg-8">
+                <div class="col-xl-8">
+                    <form class="form">
+                        <div class="card card-custom card-stretch card-shadowless gutter-b">
+                            <div class="card-header border-0 py-5">
+                                <h3 class="card-title align-items-start flex-column">
+                                    <span class="card-label font-weight-bolder text-dark">Tarefas Diarias</span>
+                                </h3>
+                            </div>
+                            <div class="card-header border-0">
+                                <h3 class="form-group">Cadastre aqui suas tarefas</h3>
+
+                                <div class="form-group">
+                                    <label>Adicionar tarefa</label>
+                                    <input type="text" id="Descricao" class="form-control form-control-lg" placeholder="Descreva a tarefa aqui!" required />
+                                </div>
+
+                            </div>
+
+                            <div class="card-footer">
+                                <button type="reset" id="CadastarTarefa" class="btn btn-success mr-2">Cadastrar</button>
+                            </div>
+                        </div>
+                    </form>
+                    <br />
+                    <form class="form1">
+                        <div class="card card-custom gutter-b example example-compact">
+                            <div class="card-header">
+                                <h3 class="card-title">Lista de Tarefas do Dia</h3>
+
+                                <table class="table table-head-custom table-vertical-center" id="kt_advance_table_widget_1">
+                                    <thead>
+                                        <tr class="text-left">
+                                            <th class="pr-0" style="width: 150px">Tarefas</th>
+                                            <th style="min-width: 80px">Data</th>
+                                            <th class="pr-0 text-right" style="min-width: 50px">Excluir</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="tarefas">
+                                    </tbody>
+                                </table>
+
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

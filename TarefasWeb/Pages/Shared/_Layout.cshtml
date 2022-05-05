@@ -1,0 +1,147 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - TarefasWeb</title>
+    <script src="~/lib/jquery/jquery-3.6.0.min.js"></script>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" />
+    <link rel="canonical" href="https://keenthemes.com/metronic" />
+    <!--begin::Fonts-->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700" />
+    <!--end::Fonts-->
+    <!--begin::Page Vendors Styles(used by this page)-->
+    <link href="/metronic/theme/html/demo6/dist/assets/plugins/custom/fullcalendar/fullcalendar.bundle.css?v=7.2.9" rel="stylesheet" type="text/css" />
+    <!--end::Page Vendors Styles-->
+    <!--begin::Global Theme Styles(used by all pages)-->
+    <link href="/metronic/theme/html/demo6/dist/assets/plugins/global/plugins.bundle.css?v=7.2.9" rel="stylesheet" type="text/css" />
+    <link href="/metronic/theme/html/demo6/dist/assets/plugins/custom/prismjs/prismjs.bundle.css?v=7.2.9" rel="stylesheet" type="text/css" />
+    <link href="/metronic/theme/html/demo6/dist/assets/css/style.bundle.css?v=7.2.9" rel="stylesheet" type="text/css" />
+    <script src="https://kit.fontawesome.com/fa5a0dacb8.js" crossorigin="anonymous"></script>
+</head>
+<body>
+    <header>
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+            <div class="container">
+                <a class="navbar-brand" asp-area="" asp-page="/Index">TarefasWeb</a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                        aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+            </div>
+        </nav>
+    </header>
+    <div class="container">
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
+    </div>
+
+    <footer class="border-top footer text-muted">
+        <div class="container">
+            &copy; 2022 - TarefasWeb - <a asp-area="" asp-page="/Privacy">Privacy</a>
+        </div>
+    </footer>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="~/js/dist/tata.js"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+
+    <script>
+        $(document).ready(function () {
+            getTarefas();
+
+            $("#CadastarTarefa").click(function (e) {
+                var inp = $("#Descricao");
+                if (inp.val().length > 0) {
+                    addTarefa();
+                    $('#Descricao').val('');
+                    e.preventDefault();
+                }
+                else
+                {                    
+                    tata.text('Tarefa', 'Descreva a tarefa', {
+                        position: 'tr',
+                        duration: 3000,
+                        holding: false,
+                        closeBtn: false,
+                        progress: true,
+                        onClick: null,
+                        onClose: null
+                    })
+                }
+            });
+
+            function addTarefa() {
+                var insert = {};
+                insert.Descricao = $("#Descricao").val();
+
+                $.ajax({
+                    url: "https://localhost:44307/api/Tarefas",
+                    type: "POST",
+                    contentType: "Application/json;charset=utf-8",
+                    data: JSON.stringify(insert),
+                    dataType: "json"
+                }).done(function (data) {
+                    $('#tarefas').html("");
+                    getTarefas();
+                    tata.success('Tarefa', 'Adicionado com sucesso', {
+                        position: 'tr',
+                        duration: 3000,
+                        holding: false,
+                        closeBtn: false,
+                        progress: true,
+                        onClick: null,
+                        onClose: null
+                    })
+                });
+            }
+
+            function deleteTarefa(id) {
+                console.log(id);
+                $.ajax({
+                    url: "https://localhost:44307/api/Tarefas/" + id,
+                    type: "DELETE",
+                    contentType: "Application/json;charset=utf-8",
+                    dataType: "json"
+                }).done(function (data) {
+                    $('#tarefas').html("");
+                    getTarefas();
+                    $('.toast').toast('show');
+                    tata.error('Tarefa', 'Concluida com sucesso', {
+                        position: 'tr',
+                        duration: 3000,
+                        holding: false,
+                        closeBtn: false,
+                        progress: true,
+                        onClick: null,
+                        onClose: null
+                    })
+                    //alert('Registro deletado com sucesso!!!');
+                });
+            }
+
+            function getTarefas() {
+                $.getJSON("https://localhost:44307/api/Tarefas",
+                    function (data) {
+                        $('#tarefas').empty();
+
+                        $.each(data, function (key, val) {
+                            var row = '<td class="pl-0"><a class="text-dark-75 font-weight-bolder text-hover-primary mb-1 font-size-lg">' + val.descricao + '</a></td><td><span class="text-dark-75 font-weight-bolder d-block font-size-lg">' + val.dataInclusao + '</span></td><td class="pr-0 text-right" style="min-width: 50px"><i class="fa-solid fa-trash-can" id="Excluir" data=' + val.id + '></i>';
+                            $('<tr/>', { html: row })
+                                .appendTo($('#tarefas'));
+                        });
+                    });
+            }
+            $("body").on("click", "#Excluir", function () {
+                var id = $(this).attr("data");
+                deleteTarefa(id);
+                e.preventDefault();
+            });
+        })
+    </script>
+</body>
+</html>
